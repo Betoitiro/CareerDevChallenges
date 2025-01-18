@@ -1,55 +1,49 @@
-import { api, requestConfig } from '../utils/config';
+import { data } from "react-router-dom";
+import { api, requestConfig } from "../utils/config";
 
-const register = async (data) => {
-    const config = requestConfig("POST", data);
+//Register user
+const register = async(data) =>{
+    const config = requestConfig("POST", data)
 
     try {
-        const response = await fetch(api + "/users/register", config);
-        const res = await response.json();
-
-        if (!response.ok) {
-            throw new Error(res?.message || "Erro ao registrar usuário");
+        const res = await fetch(api+ "/users/register", config)
+        .then((res) => res.json())
+        .catch((err) => err)
+        if(res){
+            localStorage.setItem("user", JSON.stringify(res))
         }
-
-        if (res) {
-            localStorage.setItem("user", JSON.stringify(res));
-        }
-
-        return res;
+        return res
     } catch (error) {
-        console.error("Erro no registro:", error.message);
-        return { errors: [error.message] };
+        console.log(error)       
     }
-};
+}
 
+//logout an user 
 const logout = () => {
-    localStorage.removeItem("user");
-};
+    localStorage.removeItem("user")
+}
 
-const login = async (data) => {
-    const config = requestConfig("POST", data);
+//sign in an user 
+const login = async(data) => {
+    const config = requestConfig("POST", data)
 
     try {
-        const response = await fetch(api + "/users/login", config);
-        const res = await response.json();
-        if (!response.ok) {
-            throw new Error(res?.message || "Erro ao realizar login");
+        const res = await fetch(api + "/users/login", config)
+        .then((res) => res.json())
+        .catch((err) => err)
+        if(res){
+            localStorage.setItem("user", JSON.stringify(res))
         }
-        if (res) {
-            localStorage.setItem("user", JSON.stringify(res));
-        }
-
-        return res;
+        return res
     } catch (error) {
-        console.error("Erro no login:", error.message);
-        return { errors: [error.message] }; 
+        console.log(error)
     }
-};
+}
 
 const authService = {
     register,
-    logout,
-    login,
-};
+    logout, 
+    login
+}
 
-export default authService;
+export default authService
