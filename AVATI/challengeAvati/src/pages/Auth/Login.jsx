@@ -2,7 +2,7 @@ import './Auth.css'
 
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from '../../components/Message'
+import Message from '../../components/message';
 import { Link } from 'react-router-dom'
 
 import SubmitButton from '../../components/SubmitButton '
