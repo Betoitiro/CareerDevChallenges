@@ -71,7 +71,6 @@ const Register = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     value={confirmPassword} />
                 {error && <Message msg={error} type="error" />}
-                {errorMessage && <Message msg={errorMessage} type="error" />}
                 <SubmitButton loading={loading} value="Cadastrar" />
             </form>
             <p>Já Possui conta? <Link to="/login">Faça seu login!</Link></p>

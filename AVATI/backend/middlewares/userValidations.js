@@ -3,11 +3,6 @@ const { body } = require('express-validator');
 //procurar mais validações na biblioteca depois
 const userCreateValidation = () => {
     return [
-        body("name")
-            .isString()
-            .withMessage("O nome é obrigatorio!")
-            .isLength({ min: 5 })
-            .withMessage("O nome deve ter no minimo 5 caracteres"),
         body("email")
             .isString()
             .withMessage("O email é obrigatorio!"),
@@ -43,10 +38,6 @@ const loginValidation = () => {
 
 const userUpdateValidation = () => {
     return [
-        body("name")
-            .optional()
-            .isLength({min:5})
-            .withMessage("O nome precisa de no minimo 5 caracteres!"),
         body("password")
             .optional()
             .isLength({min:8})
