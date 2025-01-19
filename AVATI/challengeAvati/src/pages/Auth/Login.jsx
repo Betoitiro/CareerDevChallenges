@@ -2,9 +2,9 @@ import './Auth.css';
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Message from '../../components/message';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+import Message from '../../components/message';
 import SubmitButton from '../../components/SubmitButton ';
 import { login, reset } from '../../slice/AuthSlice';
 
@@ -12,13 +12,18 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [formError, setFormError] = useState("");
+    const [formSuccess, setFormSuccess] = useState("");
 
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
+    const { loading, error, user } = useSelector((state) => state.auth);
+
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setFormError("");
+        setFormSuccess("");
+
         if (!email) {
             setFormError("O campo de e-mail é obrigatório.");
             return;
@@ -51,6 +56,17 @@ const Login = () => {
         dispatch(reset());
     }, [dispatch]);
 
+    useEffect(() => {
+        if (user) {
+            setFormSuccess("Login realizado com sucesso! Seja bem-vindo");
+            console.log("aqui")
+            setTimeout(() => {
+                setFormSuccess("");
+                navigate("/"); 
+            }, 2000); 
+        }
+    }, [user, navigate]); 
+
     return (
         <div id="login">
             <h2>Big Tech</h2>
@@ -75,6 +91,7 @@ const Login = () => {
                 <SubmitButton loading={loading} value="Entrar" />
             </form>
             {formError && <Message msg={formError} type="error" />}
+            {formSuccess && <Message msg={formSuccess} type="success" />}
             {error && <Message msg={error} type="error" />}
             <p>
                 Não possui conta? <Link to={'/register'}>Clique aqui</Link>

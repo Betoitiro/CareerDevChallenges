@@ -1,6 +1,6 @@
 import './Auth.css';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Message from '../../components/message';
 import SubmitButton from '../../components/SubmitButton ';
 import { useEffect, useState } from 'react';
@@ -12,13 +12,16 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [formError, setFormError] = useState(null);
+    const [formError, setFormError] = useState("");
+    const [formSuccess, setFormSuccess] = useState("")
 
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
+    const { loading, error, user } = useSelector((state) => state.auth);
+
+    const navigate = useNavigate()
 
     const validateForm = () => {
-        setFormError(null);
+        setFormError("");
 
         if (!email || !password || !confirmPassword) {
             setFormError('Por favor, preencha todos os campos.');
@@ -47,6 +50,7 @@ const Register = () => {
         e.preventDefault();
 
         if (!validateForm()) return;
+        setFormSuccess("")
 
         const user = { email, password };
         dispatch(register(user));
@@ -56,6 +60,15 @@ const Register = () => {
         dispatch(reset());
     }, [dispatch]);
 
+    useEffect(() => {
+        if(user){
+            setFormSuccess("Cadastro realizado com sucesso!")
+            setTimeout(() => {
+                setFormSuccess("")
+                navigate("/")
+            }, 2000)
+        }
+    },[user, navigate])
     return (
         <div id="register">
             <h2>React Gram</h2>
@@ -81,6 +94,7 @@ const Register = () => {
                 />
                 <SubmitButton loading={loading} value="Cadastrar" />
                 {formError && <Message msg={formError} type="error" />}
+                {formSuccess && <Message msg={formSuccess} type="success" />}
                 {error && <Message msg={error} type="error" />}
             </form>
             <p>
