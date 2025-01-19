@@ -1,61 +1,86 @@
-import './Auth.css'
+import './Auth.css';
 
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Message from '../../components/message';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-import SubmitButton from '../../components/SubmitButton '
-import {login, reset } from '../../slice/AuthSlice'
+import SubmitButton from '../../components/SubmitButton ';
+import { login, reset } from '../../slice/AuthSlice';
 
 const Login = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] =useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [formError, setFormError] = useState("");
 
-    const dispacth = useDispatch()
-    const {loading, error} = useSelector((state) => state.auth)
+    const dispatch = useDispatch();
+    const { loading, error } = useSelector((state) => state.auth);
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setFormError("");
+        if (!email) {
+            setFormError("O campo de e-mail é obrigatório.");
+            return;
+        }
+
+        if (!email.includes("@") || !email.includes(".")) {
+            setFormError("Por favor, insira um e-mail válido.");
+            return;
+        }
+
+        if (!password) {
+            setFormError("O campo de senha é obrigatório.");
+            return;
+        }
+
+        if (password.length < 8) {
+            setFormError("A senha deve ter pelo menos 8 caracteres.");
+            return;
+        }
 
         const user = {
             email,
-            password
-        }
+            password,
+        };
 
-        dispacth(login(user))
+        dispatch(login(user));
+    };
 
-    }
-
-    useEffect(()=> {
-        dispacth(reset())
-    },[dispacth])
+    useEffect(() => {
+        dispatch(reset());
+    }, [dispatch]);
 
     return (
-        <div id='login'>
+        <div id="login">
             <h2>Big Tech</h2>
-            <p className='subtitle'>Faça seu login e seja feliz!</p>
+            <p className="subtitle">Faça seu login e seja feliz!</p>
             <form onSubmit={handleSubmit}>
-                <input 
-                type="text" 
-                name="email"
-                 id="email" p
-                 placeholder='E-mail'
-                 onChange={(e)=> setEmail(e.target.value)} 
-                 value={email}/>
-                <input 
-                type="password" 
-                name="passoword" 
-                id="passoword" 
-                placeholder='Senha'
-                onChange={(e)=> setPassword(e.target.value)} 
-                value={password}/>
-                <SubmitButton loading={loading} value="Cadastrar" />
+                <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="E-mail"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                />
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Senha"
+                    onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                />
+                <SubmitButton loading={loading} value="Entrar" />
             </form>
+            {formError && <Message msg={formError} type="error" />}
             {error && <Message msg={error} type="error" />}
-            <p>Não possui conta? <Link to={'/register'}>Clique aqui</Link></p>
-            </div>
-    )
-}
+            <p>
+                Não possui conta? <Link to={'/register'}>Clique aqui</Link>
+            </p>
+        </div>
+    );
+};
 
-export default Login
+export default Login;

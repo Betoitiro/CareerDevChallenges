@@ -1,14 +1,11 @@
 import './Auth.css';
 
-// Components
 import { Link } from 'react-router-dom';
 import Message from '../../components/message';
 import SubmitButton from '../../components/SubmitButton ';
-// Hooks
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-// Redux
 import { register, reset } from '../../slice/AuthSlice';
 
 const Register = () => {
@@ -21,7 +18,6 @@ const Register = () => {
     const { loading, error } = useSelector((state) => state.auth);
 
     const validateForm = () => {
-        // Reset previous errors
         setFormError(null);
 
         if (!email || !password || !confirmPassword) {
@@ -29,8 +25,7 @@ const Register = () => {
             return false;
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
             setFormError('Por favor, insira um e-mail válido.');
             return false;
         }
@@ -51,16 +46,12 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const user = {
-            email,
-            password,
-            confirmPassword,
-        };
+        if (!validateForm()) return;
 
+        const user = { email, password };
         dispatch(register(user));
     };
 
-    // Clean all authState on component mount
     useEffect(() => {
         dispatch(reset());
     }, [dispatch]);
@@ -89,10 +80,8 @@ const Register = () => {
                     value={confirmPassword}
                 />
                 <SubmitButton loading={loading} value="Cadastrar" />
-
                 {formError && <Message msg={formError} type="error" />}
                 {error && <Message msg={error} type="error" />}
-
             </form>
             <p>
                 Já tem conta? <Link to="/login">Clique Aqui</Link>
