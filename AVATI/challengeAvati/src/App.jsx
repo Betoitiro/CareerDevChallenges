@@ -29,6 +29,7 @@ const App = () => {
             <Route path='/' element={auth ? <Home/> : <Navigate to={"/login"}/>}/>
           </Routes>
         </div>
+        <Footer/>
       </BrowserRouter>
     </div>
   )

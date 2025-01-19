@@ -3,7 +3,7 @@ import './Footer.css'
 const Footer = () => {
     return (
         <footer id='footer'>
-            <p>react gram &copy; 2025 </p>
+            <p>Big tech&copy; 2025 </p>
         </footer>
     )
 
