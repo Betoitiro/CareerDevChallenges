@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: postgres_postgis
+    environment:
+      POSTGRES_USER: postgre
+      POSTGRES_PASSWORD: 1234567
+      POSTGRES_DB: postgre
+    ports:
+      - "5433:5432"   # mapear a porta 5433 do host para 5432 do container
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  backend:
+    build: .
+    container_name: backend_app
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=postgre
+      - DB_PASSWORD=1234567
+      - DB_HOST=db
+      - DB_NAME=postgre
+      - DB_PORT=5432
+      - NODE_ENV=development
+    depends_on:
+      - db
+    networks:
+      - backend-network
+
+
+volumes:
+  pgdata:
+
+networks:
+  backend-network:
+    driver: bridge
