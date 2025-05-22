@@ -14,6 +14,7 @@ const authGuard = require("../middlewares/authGuard")
 //Post
 userRouter.post("/register", userCreateValidation(), validate, register)
 userRouter.post("/login", loginValidation(), validate, login)
+userRouter.post("/addHome", validate)
 
 //Get
 userRouter.get("/profile", authGuard, getCurrentUser)
