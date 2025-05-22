@@ -1,23 +1,32 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const pool = require('./config/db'); // ajuste o caminho conforme sua estrutura
+require("dotenv").config()
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+const express = require("express")
+const path = require("path")
+const cors = require("cors")
 
-app.get('/', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.send(`Conectado! Hora atual do banco: ${result.rows[0].now}`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro na conexão com o banco');
-  }
-});
+const port = process.env.PORT;
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-});
+const app = express()
+
+
+//config JSON and form data response
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+
+//Solve CORS (Rota que vai ser usada no react)
+app.use(cors({credentials: true, origin: "http://localhost:5173"}))
+
+//Upload directory
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+
+
+//DB connections
+require("./config/db.js")
+
+//routes
+const router = require("./routes/Router.js")
+app.use(router)
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)    
+})  
